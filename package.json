@@ -1,0 +1,24 @@
+{
+  "name": "nexus-orchestrator-sdk",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "bun@1.1.30",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:packages": "bun run scripts/build-packages.ts",
+    "test": "bun test",
+    "changeset": "changeset",
+    "release:version": "changeset version",
+    "release:publish": "changeset publish",
+    "create:nexus-app": "bun run packages/create-nexus-app/src/cli.ts"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.9",
+    "@types/node": "^22.7.4",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "zod": "^3.23.8"
+  }
+}
