@@ -1,5 +1,4 @@
-# Nexus Orchestrator SDK
-
+# Nexus AI SDK
 [![CI](https://github.com/NicoKhaghani/nexus-orchestrator-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/NicoKhaghani/nexus-orchestrator-sdk/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![TypeScript](https://img.shields.io/badge/language-TypeScript-blue)
