@@ -1,111 +1,211 @@
 # Nexus Orchestrator SDK
 
-Build, observe, and settle **Quest-based AI execution** through a unified orchestration surface.
+[![CI](https://github.com/NicoKhaghani/nexus-orchestrator-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/NicoKhaghani/nexus-orchestrator-sdk/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![TypeScript](https://img.shields.io/badge/language-TypeScript-blue)
+![Monorepo](https://img.shields.io/badge/architecture-monorepo-black)
 
-This monorepo contains the core packages used by **Nexus AI** to turn a single objective into a complete, structured outcome:
+Build, observe, and settle Quest-based AI execution through a unified orchestration surface.
 
-**objective → Quest Plan → execution graph → verification → assembly → final delivery**
+This monorepo contains the core packages used by Nexus AI to turn a single objective into a complete, structured outcome.
 
-Nexus is not a single-model chat runtime. It is an **execution orchestrator**:
+objective → Quest Plan → execution graph → verification → assembly → final delivery
+
+Nexus is not a single-model chat runtime. It is an execution orchestrator that:
+
 - interprets intent
 - decomposes objectives into stages and steps
 - routes work to specialized capabilities
 - schedules independent work in parallel
 - validates intermediate outputs
 - assembles a single final result
-- settles once per Quest via **x402**
+- settles once per Quest via x402
 
-## Overview
+---
 
-### Why Nexus
-Most AI products expose isolated tools or chat interfaces. Nexus exposes an **execution surface**.
+# Overview
 
-A user expresses an objective. Nexus builds a **Quest Plan**, runs the work through an execution graph, verifies the outputs, and delivers a final artifact.
+## Why Nexus
 
-### Core properties
-- **Quest-first execution** — requests are treated as objectives, not raw message loops
-- **Observable orchestration** — phases, step status, validation, and summaries are visible
-- **Capability routing** — text, code, media, and verification capabilities are coordinated internally
-- **Single settlement** — one quote, one validation, one settlement per Quest via x402
-- **Composable runtime** — capabilities can be defined, tested, and integrated through package interfaces
+Most AI products expose isolated tools or chat interfaces. Nexus exposes an execution surface.
 
-## Monorepo Structure
+A user expresses an objective. Nexus builds a Quest Plan, runs the work through an execution graph, verifies the outputs, and delivers a final artifact.
 
-```text
+---
+
+## Core properties
+
+Quest-first execution  
+Requests are treated as objectives rather than raw message loops.
+
+Observable orchestration  
+Phases, step status, validation, and execution summaries are visible.
+
+Capability routing  
+Text, code, media, and verification capabilities are coordinated internally.
+
+Single settlement  
+One quote, one validation, one settlement per Quest via x402.
+
+Composable runtime  
+Capabilities can be defined, tested, and integrated through package interfaces.
+
+---
+
+# System Architecture
+
+Nexus converts a single objective into a structured execution pipeline.
+
+User Objective  
+      │  
+      ▼  
+Quest Planner  
+      │  
+      ▼  
+Execution Graph  
+ ┌───────────────┬───────────────┬───────────────┐  
+ ▼               ▼               ▼  
+Text Capability  Code Capability  Media Capability  
+      │  
+      ▼  
+Verification Layer  
+      │  
+      ▼  
+Assembly  
+      │  
+      ▼  
+Final Deliverable  
+
+---
+
+# Monorepo Structure
+
 nexus-orchestrator-sdk/
-  packages/
-    orchestrator-core/      # Quest planning + execution graph + assembly
-    capability-runtime/     # Capability contracts, adapters, routing metadata
-    x402-kit/               # Quote / validate / retry-with-proof helpers
-    create-nexus-app/       # CLI scaffolding tool
-  scripts/                  # Build and release helpers
-  .github/workflows/        # CI
-  .changeset/               # Versioning and release metadata
-  .husky/                   # Git hooks
-  README.md
-  AGENTS.md
-  CONTRIBUTING.md
-  package.json
-  justfile
-```
+
+packages/  
+ orchestrator-core/      # Quest planning + execution graph + assembly  
+ capability-runtime/     # Capability contracts, adapters, routing metadata  
+ x402-kit/               # Quote / validate / retry-with-proof helpers  
+ create-nexus-app/       # CLI scaffolding tool  
+
+scripts/                  # Build and release helpers  
+.github/workflows/        # CI  
+.changeset/               # Versioning and release metadata  
+.husky/                   # Git hooks  
+
+README.md  
+AGENTS.md  
+CONTRIBUTING.md  
+package.json  
+justfile  
 
 Each package contains its own:
-- `package.json`
-- `src/`
-- `README.md`
-- `examples/`
-- `__tests__/` (where applicable)
 
-## Key Packages
+- package.json  
+- src/  
+- README.md  
+- examples/  
+- __tests__/ (where applicable)
 
-### `@nexus/orchestrator-core`
-Core Quest runtime:
+---
+
+# Key Packages
+
+## @nexus/orchestrator-core
+
+Core Quest runtime responsible for:
+
 - objective interpretation
 - Quest Plan generation
 - dependency-aware execution graph
 - validation hooks
 - assembly into a single deliverable
 
-### `@nexus/capability-runtime`
-Capability interfaces and adapters:
+---
+
+## @nexus/capability-runtime
+
+Capability interfaces and adapters.
+
+Includes:
+
 - input / output contracts
 - routing metadata
 - execution adapters
 - capability registry helpers
 
-### `@nexus/x402-kit`
-Settlement helpers for pay-per-execution flows:
+---
+
+## @nexus/x402-kit
+
+Settlement helpers for pay-per-execution flows.
+
+Includes:
+
 - quote building
 - quote validation
 - retry-with-proof payload helpers
 - response typing
 
-### `@nexus/create-nexus-app`
-CLI scaffold for bootstrapping a new Nexus-compatible runtime or capability pack.
+---
 
-## Features
+## @nexus/create-nexus-app
 
-### Quest Plan generation
+CLI scaffold used to bootstrap a new Nexus-compatible runtime or capability pack.
+
+---
+
+# Features
+
+## Quest Plan generation
+
 Turn an objective into a structured execution plan with stages, steps, and dependencies.
 
-### Execution Graph
-Run work sequentially or in parallel when dependencies allow it.
+---
 
-### Verification
-Apply schema, constraints, or business checks before assembly.
+## Execution Graph
 
-### Assembly
-Merge outputs into a single coherent result: text, files, metadata, or composite deliverables.
+Run work sequentially or in parallel depending on dependency constraints.
 
-### Execution Observability
-Track phase transitions, step status, validation notes, duration, and cost summary.
+---
 
-### x402 Settlement
-Return a quote before execution, validate once, settle once per Quest.
+## Verification
 
-## Example
+Apply schema validation, constraints, or business checks before assembly.
 
-```ts
+---
+
+## Assembly
+
+Merge outputs into a single coherent result:
+
+- text
+- files
+- structured data
+- composite deliverables
+
+---
+
+## Execution Observability
+
+Track:
+
+- phase transitions
+- step status
+- validation notes
+- execution duration
+- cost summary
+
+---
+
+## x402 Settlement
+
+Return a quote before execution, validate once, and settle once per Quest.
+
+---
+
+# Example
+
 import { createQuestRuntime } from "@nexus/orchestrator-core";
 import { z } from "zod";
 
@@ -128,73 +228,103 @@ runtime.defineQuest({
   key: "investor.onepager",
   async plan({ objective }) {
     return {
-      phases: ["interpretation", "planning", "execution", "verification", "assembly"],
+      phases: [
+        "interpretation",
+        "planning",
+        "execution",
+        "verification",
+        "assembly"
+      ],
       steps: [
         {
           id: "draft",
           uses: "text.generate",
-          input: { prompt: objective },
-        },
+          input: { prompt: objective }
+        }
       ],
-      deliverable: { from: "draft" },
+      deliverable: { from: "draft" }
     };
-  },
+  }
 });
 
 export default runtime;
-```
 
-This minimal example shows the Nexus model clearly:
-1. define a runtime
-2. register capabilities
-3. define how a Quest is planned
-4. execute through one observable graph
-5. return one assembled result
+This minimal example demonstrates the Nexus execution model:
 
-## Quick Start
+1. define a runtime  
+2. register capabilities  
+3. define how a Quest is planned  
+4. execute through a structured graph  
+5. return one assembled result  
 
-### Prerequisites
-- **Bun** >= 1.1
-- **Git**
+---
 
-### Install dependencies
-```bash
-git clone <your-repo-url>
-cd nexus-orchestrator-sdk
+# Quick Start
+
+## Prerequisites
+
+- Bun ≥ 1.1
+- Git
+
+---
+
+## Install dependencies
+
+git clone https://github.com/NicoKhaghani/nexus-orchestrator-sdk  
+cd nexus-orchestrator-sdk  
 bun install
-```
 
-### Build all packages
-```bash
+---
+
+## Build all packages
+
 bun run build:packages
-```
 
-### Run all tests
-```bash
+---
+
+## Run all tests
+
 bun test
-```
 
-### Run the CLI locally
-```bash
+---
+
+## Run the CLI locally
+
 bun run create:nexus-app
-```
 
-## Working with the Codebase
+---
 
-1. Install dependencies: `bun install`
-2. Explore packages under `packages/`
-3. Check `examples/` in each package
-4. Build packages: `bun run build:packages`
+# Working with the Codebase
+
+1. Install dependencies
+
+bun install
+
+2. Explore packages under packages/
+
+3. Review examples inside each package
+
+4. Build packages
+
+bun run build:packages
+
 5. Run tests before opening PRs
 
-## Contributing
+bun test
 
-Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
+---
+
+# Contributing
+
+Please see CONTRIBUTING.md for:
+
 - development setup
 - coding standards
 - testing guidelines
 - release process
 
-## License
+---
+
+# License
 
 MIT
