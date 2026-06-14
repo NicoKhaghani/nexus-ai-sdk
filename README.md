@@ -22,23 +22,28 @@ whole Quest once via **x402**.
 
 ## Status
 
-Early but **functional** core. What is implemented today:
+Nexus AI SDK is in alpha.
 
-- **Dependency-aware execution graph** — steps declare `dependsOn`; the runtime validates the DAG
-  (rejecting cycles and dangling dependencies) and schedules independent steps into concurrent waves.
-- **Real parallel execution** — independent steps in a wave run via `Promise.all`.
-- **Schema-enforced verification** — optional `zod` input/output schemas are enforced per step; a
-  breach marks the step failed and the run's `validationStatus` as `fail`.
-- **Assembly** — outputs are merged, or a single step's output is selected via `deliverable.from`.
-- **Observability** — subscribe to phase and per-step lifecycle events.
-- **Per-step retries** — optional retry policy with exponential backoff.
-- **x402 settlement, end to end** — quotes that record a deterministic plan hash, ERC-3009
-  `TransferWithAuthorization` EIP-712 construction, **real signature recovery** (viem), and on-chain
-  submission via a facilitator that pays gas and settles each nonce exactly once. The plan hash is
-  enforced server-side; it is not part of the signed payload (see note below).
+The core runtime is functional today: it can take a Quest, execute structured steps, manage dependencies, validate outputs, and assemble a final result.
 
-Not yet implemented (tracked in [ROADMAP.md](./ROADMAP.md)): persistent (cross-process) nonce store
-for the facilitator, streaming/partial results, and the capability marketplace.
+What is available now:
+
+* Quest-based execution
+* Capability registration
+* Dependency-aware workflows
+* Parallel task execution
+* Output validation
+* Step retries
+* Runtime events
+* Final result assembly
+* Optional x402 payment flow
+
+Still in progress:
+
+* Persistent production storage
+* Streaming results
+* Capability marketplace
+* More production-ready examples
 
 ---
 
