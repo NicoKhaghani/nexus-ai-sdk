@@ -1,3 +1,4 @@
 # Changesets
 
-This folder stores package release metadata for the Nexus Orchestrator SDK monorepo.
+This folder holds [changesets](https://github.com/changesets/changesets). Run
+`bun run changeset` to add one describing your change; releases consume them.

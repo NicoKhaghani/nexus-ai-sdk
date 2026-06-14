@@ -10,7 +10,7 @@ test:
 	bun test
 
 typecheck:
-	bunx tsc --noEmit
+	bun run typecheck
 
-changeset:
-	bun run changeset
+format:
+	bun run format

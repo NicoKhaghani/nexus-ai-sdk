@@ -1,16 +1,12 @@
 # @nexus/capability-runtime
 
-Capability contracts, registries, adapters, and execution wrappers.
+Capability contracts and a schema-enforcing registry with tag-based routing.
 
-## Install
+```ts
+import { CapabilityRegistry } from "@nexus/capability-runtime";
 
-```bash
-bun add @nexus/capability-runtime
-```
-
-## Development
-
-```bash
-bun run build
-bun test
+const reg = new CapabilityRegistry();
+reg.register({ metadata: { key: "text.generate", tags: ["text"] }, input, output, execute });
+await reg.invoke("text.generate", { prompt: "hi" }); // validates input + output
+reg.byTag("text"); // routing
 ```

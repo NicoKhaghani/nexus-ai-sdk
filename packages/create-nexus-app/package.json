@@ -2,15 +2,12 @@
   "name": "@nexus/create-nexus-app",
   "version": "0.1.0",
   "type": "module",
+  "bin": { "create-nexus-app": "./dist/cli.js" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist", "README.md"],
   "scripts": {
-    "build": "bunx tsc -p tsconfig.json",
-    "dev": "bunx tsc -w -p tsconfig.json",
+    "build": "tsc -p tsconfig.json",
     "test": "bun test"
-  },
-  "dependencies": {
-    "zod": "^3.23.8"
   }
 }

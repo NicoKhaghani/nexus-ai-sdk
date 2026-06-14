@@ -1,41 +1,27 @@
-# AGENTS
+# AGENTS.md
 
-This repository contains **Quest-based execution runtimes** and **capability packs** used by Nexus AI.
+Guidance for AI coding agents (and humans) working in this repo.
 
-## What is a Quest?
-A Quest is a single execution unit:
+## Layout
+- Source lives in `packages/<name>/src`. Tests in `packages/<name>/__tests__`. Examples in
+  `packages/<name>/examples`.
+- Cross-package imports use the workspace alias `@nexus/<name>` (see each `tsconfig.json` `paths`).
 
-**objective → plan → run → verify → assemble → deliver**
+## Build order
+`@nexus/x402-kit` builds before `@nexus/orchestrator-core` (the latter imports the former). The
+build script enforces this order.
 
-When paid execution is enabled, a Quest is quoted and settled once through x402.
+## Rules
+- Keep claims in docs aligned with code. If a feature isn't implemented, list it under ROADMAP
+  "Next", not as done.
+- Every capability that can fail should surface the failure; do not swallow errors into a fake
+  success.
+- New runtime behavior needs a test in `__tests__` that exercises it (concurrency, retries,
+  validation, settlement).
+- Run `bun run typecheck` and `bun test` before committing.
 
-## Core Concepts
-
-### Quest Plan
-A structured plan containing:
-- phases
-- steps
-- dependencies
-- target deliverable
-
-### Capability
-A specialized execution unit such as:
-- text generation
-- code generation
-- media generation
-- schema validation
-- formatting / export
-
-### Execution Graph
-A dependency-aware graph that allows:
-- sequential execution
-- safe parallel execution
-- retries
-- validation hooks
-
-### Execution Summary
-A normalized summary of:
-- tasks executed
-- validation results
-- total duration
-- settlement metadata
+## Commands
+- `bun install`
+- `bun run typecheck`
+- `bun run build:packages`
+- `bun test`

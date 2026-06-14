@@ -1,53 +1,66 @@
-# Nexus Architecture
+# Architecture
 
-Nexus is an orchestration runtime designed to transform a single objective into a structured execution pipeline.
+Nexus converts a single objective into a structured, paid execution pipeline.
 
-The system is composed of several cooperating layers.
+```
+User Objective
+      │
+      ▼
+ Quest Planner            (quest.plan: objective -> Quest Plan)
+      │
+      ▼
+ Execution Graph          (DAG: steps + dependsOn; validated for cycles)
+      │
+      ├── wave 0: independent steps run concurrently (Promise.all)
+      ├── wave 1: steps whose deps completed
+      └── ...
+      │
+      ▼
+ Verification             (zod input/output schemas per step; retries on failure)
+      │
+      ▼
+ Assembly                 (merge outputs, or select deliverable.from)
+      │
+      ▼
+ Settlement (x402)        (quote -> sign -> verify+recover -> on-chain, once)
+      │
+      ▼
+ Final Deliverable
+```
 
-Execution Interface  
-The user-facing interface where objectives are submitted and results are delivered.
+## Packages
 
-Quest Planner  
-Interprets objectives and generates a structured Quest Plan.
+| Package | Responsibility |
+|---|---|
+| `@nexus/orchestrator-core` | Quest planning, DAG scheduling (`graph.ts`, Kahn's algorithm), parallel execution with retries (`runtime.ts`), assembly, and the `runPaidQuest` settlement gate (`settlement.ts`). |
+| `@nexus/capability-runtime` | Capability contracts and a schema-enforcing registry with tag-based routing. |
+| `@nexus/x402-kit` | Quote building (deterministic plan hash + crypto nonce), ERC-3009 EIP-712 typed-data, real signature recovery (viem), on-chain `transferWithAuthorization` submission, and an idempotent facilitator. |
+| `@nexus/create-nexus-app` | CLI that scaffolds a runnable Nexus runtime project. |
 
-Execution Graph  
-Builds a dependency-aware execution graph describing all required tasks.
+## Execution model
 
-Capability Registry  
-Maintains available capabilities that can be used during execution.
+A **Quest Plan** is a DAG. Each `QuestStep` names a capability (`uses`), an `input`, and optional
+`dependsOn`. The runtime:
 
-Execution Capabilities  
-Specialized modules responsible for performing specific tasks such as:
+1. validates the graph (`scheduleWaves`) — rejecting duplicate ids, dangling dependencies, cycles;
+2. groups steps into **waves** (a wave = steps with all dependencies satisfied);
+3. runs each wave with `Promise.all`, so independent steps execute concurrently;
+4. passes completed step outputs to dependents via `ctx.outputs`;
+5. enforces optional zod input/output schemas, retrying per the step's `retry` policy;
+6. assembles the deliverable.
 
-- text generation
-- code generation
-- image generation
-- data retrieval
-- validation
+## Settlement model (x402)
 
-Verification Layer  
-Ensures outputs conform to schemas, constraints, and expected structures.
+The quote records `planHash`, the sha256 of the canonicalized plan, alongside `amount`, `payTo`,
+`chainId`, a validity window, and a single-use nonce. The payer signs an ERC-3009
+`TransferWithAuthorization` (EIP-712) authorizing a USDC transfer. **The signed payload covers
+`from`, `to`, `value`, `validAfter`, `validBefore`, and `nonce` only — not `planHash`.** The
+server-side facilitator recovers the signer, checks the binding (quest id + nonce) and validity
+window, enforces the `planHash` against its stored quote, then relays `transferWithAuthorization`
+on-chain (paying gas). Each nonce settles at most once. `runPaidQuest` ensures execution only follows
+a cleared settlement.
 
-Assembly Layer  
-Combines all outputs into a coherent final deliverable.
-
-Settlement Layer  
-Handles execution pricing and settlement using x402.
-
-Execution Flow
-
-User Objective  
-↓  
-Quest Planner  
-↓  
-Execution Graph  
-↓  
-Capability Routing  
-↓  
-Verification  
-↓  
-Assembly  
-↓  
-Final Deliverable  
-↓  
-Settlement
+The facilitator's used-nonce set is **in-memory by default — adequate for demos/dev, not for
+production.** A production deployment must persist quote records (`quoteId`, `nonce`, `planHash`,
+`payer`, `amount`, `asset`, `expiration`) in a shared store and enforce them during verification, so
+anti-replay and plan-hash binding survive across processes and restarts.

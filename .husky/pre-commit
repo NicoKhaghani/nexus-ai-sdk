@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-bun test
+bun run typecheck && bun run format

@@ -6,7 +6,14 @@
     "declaration": true,
     "outDir": "dist",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "paths": {
+      "@nexus/orchestrator-core": ["../orchestrator-core/src"],
+      "@nexus/capability-runtime": ["../capability-runtime/src"],
+      "@nexus/x402-kit": ["../x402-kit/src"]
+    }
   },
   "include": ["src/**/*.ts"]
 }

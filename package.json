@@ -1,14 +1,14 @@
 {
-  "name": "nexus-orchestrator-sdk",
+  "name": "nexus-ai-sdk",
   "private": true,
   "version": "0.1.0",
   "packageManager": "bun@1.1.30",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "build:packages": "bun run scripts/build-packages.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "bun test",
+    "format": "prettier --write .",
     "changeset": "changeset",
     "release:version": "changeset version",
     "release:publish": "changeset publish",
