@@ -2,19 +2,21 @@ import { z } from "zod";
 import { createQuestRuntime } from "../src";
 
 /**
- * A real, runnable Quest: it defines a model-backed `text.generate` capability,
- * a parallel `media.caption` capability that depends on the draft, and a quest
- * that fans out then assembles.
+ * Extended Mode example: a model-backed `text.generate` capability, a parallel
+ * `media.caption` capability that depends on the draft, and a quest that fans
+ * out then assembles.
  *
- * The text capability calls the Anthropic Messages API when ANTHROPIC_API_KEY
- * is set, and otherwise falls back to a deterministic local transform so the
- * example runs offline and in CI.
+ * Nexus AI orchestrates capabilities without requiring external providers. This
+ * example opts into Extended Mode and shows an optional Anthropic integration
+ * when ANTHROPIC_API_KEY is set; otherwise it falls back to a deterministic
+ * transform so the example runs in CI without any external API.
  */
 
 const runtime = createQuestRuntime({
   name: "demo-runtime",
   version: "0.1.0",
-  description: "Model-backed Quest runtime",
+  description: "Extended Mode example with optional model-backed capability",
+  executionMode: "extended",
 });
 
 runtime.defineCapability({

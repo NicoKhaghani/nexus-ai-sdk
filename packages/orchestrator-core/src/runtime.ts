@@ -22,7 +22,10 @@ export class QuestRuntime {
   private readonly listeners = new Set<EventListener>();
 
   constructor(metadata: QuestRuntimeMetadata) {
-    this.metadata = metadata;
+    this.metadata = {
+      ...metadata,
+      executionMode: metadata.executionMode ?? "private",
+    };
   }
 
   /** Subscribe to execution lifecycle events. Returns an unsubscribe fn. */

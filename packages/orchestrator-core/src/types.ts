@@ -32,10 +32,14 @@ export interface QuestPlan {
   deliverable?: { from: string } | Record<string, unknown>;
 }
 
+export type ExecutionMode = "private" | "extended";
+
 export interface QuestRuntimeMetadata {
   name: string;
   version: string;
   description?: string;
+  /** Default: "private". Extended Mode allows developer-configured external capabilities. */
+  executionMode?: ExecutionMode;
 }
 
 /**

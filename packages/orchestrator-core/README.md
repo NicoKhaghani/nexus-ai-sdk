@@ -14,6 +14,10 @@ import { createQuestRuntime, runPaidQuest } from "@nexus/orchestrator-core";
 Execution runs independent steps concurrently, passes dependency outputs via `ctx.outputs`, enforces
 optional zod schemas, and retries per a step's `retry` policy. See `examples/`.
 
+**Private Mode** is the default (`executionMode` omitted or `"private"`). Nexus orchestrates
+capabilities without requiring external providers. External LLMs and APIs are optional capability
+implementations configured in **Extended Mode** — they are integrations, not Nexus dependencies.
+
 ## Dependency failure semantics
 
 If a step fails, any downstream step that depends on it (directly or transitively) is marked

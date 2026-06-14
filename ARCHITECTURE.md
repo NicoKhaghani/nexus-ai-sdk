@@ -49,6 +49,15 @@ A **Quest Plan** is a DAG. Each `QuestStep` names a capability (`uses`), an `inp
 5. enforces optional zod input/output schemas, retrying per the step's `retry` policy;
 6. assembles the deliverable.
 
+## Provider-agnostic capabilities
+
+Nexus AI orchestrates capabilities. A capability may be internal, private, API-backed,
+model-backed, or fully custom. The runtime does not require any specific LLM provider.
+
+Capabilities can be internal functions, private services, controlled infrastructure, external APIs,
+external LLMs, or future local models. External providers are optional and belong to **Extended
+Mode**; the orchestrator itself does not depend on any specific model provider.
+
 ## Settlement model (x402)
 
 The quote records `planHash`, the sha256 of the canonicalized plan, alongside `amount`, `payTo`,

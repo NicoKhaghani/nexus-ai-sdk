@@ -22,28 +22,46 @@ whole Quest once via **x402**.
 
 ## Status
 
-Nexus AI SDK is in alpha.
+Early but **functional** core. What is implemented today:
 
-The core runtime is functional today: it can take a Quest, execute structured steps, manage dependencies, validate outputs, and assemble a final result.
+- **Dependency-aware execution graph** — steps declare `dependsOn`; the runtime validates the DAG
+  (rejecting cycles and dangling dependencies) and schedules independent steps into concurrent waves.
+- **Real parallel execution** — independent steps in a wave run via `Promise.all`.
+- **Schema-enforced verification** — optional `zod` input/output schemas are enforced per step; a
+  breach marks the step failed and the run's `validationStatus` as `fail`.
+- **Assembly** — outputs are merged, or a single step's output is selected via `deliverable.from`.
+- **Observability** — subscribe to phase and per-step lifecycle events.
+- **Per-step retries** — optional retry policy with exponential backoff.
+- **x402 settlement, end to end** — quotes that record a deterministic plan hash, ERC-3009
+  `TransferWithAuthorization` EIP-712 construction, **real signature recovery** (viem), and on-chain
+  submission via a facilitator that pays gas and settles each nonce exactly once. The plan hash is
+  enforced server-side; it is not part of the signed payload (see note below).
 
-What is available now:
+Not yet implemented (tracked in [ROADMAP.md](./ROADMAP.md)): persistent (cross-process) nonce store
+for the facilitator, streaming/partial results, and the capability marketplace.
 
-* Quest-based execution
-* Capability registration
-* Dependency-aware workflows
-* Parallel task execution
-* Output validation
-* Step retries
-* Runtime events
-* Final result assembly
-* Optional x402 payment flow
+---
 
-Still in progress:
+## Execution Modes
 
-* Persistent production storage
-* Streaming results
-* Capability marketplace
-* More production-ready examples
+Nexus AI orchestrates capabilities. A capability may be internal, private, API-backed,
+model-backed, or fully custom. The runtime does not require any specific LLM provider.
+
+**Private Mode** (default) — privacy-first execution using internal and private capabilities only.
+No external LLM or model dependency. Suitable for web deployments where execution stays inside
+the controlled Nexus environment.
+
+**Extended Mode** (optional) — allows developer-configured external capabilities. External LLMs and
+APIs are used only when explicitly enabled. Nexus remains provider-agnostic; external providers are
+integrations, not runtime dependencies.
+
+```ts
+const runtime = createQuestRuntime({
+  name: "my-runtime",
+  version: "0.1.0",
+  executionMode: "extended", // omit for Private Mode (default)
+});
+```
 
 ---
 
@@ -106,9 +124,9 @@ console.log(result.summary);     // { tasksExecuted, validationStatus, waves, ..
 console.log(result.deliverable); // assembled output of the "summary" step
 ```
 
-A runnable, model-backed version (calls the Anthropic API when `ANTHROPIC_API_KEY` is set, falls
-back to an offline transform otherwise) lives at
+An Extended Mode example with an optional model-backed capability lives at
 [`packages/orchestrator-core/examples/model-capability.ts`](./packages/orchestrator-core/examples/model-capability.ts).
+The core example above runs without any external provider.
 
 ---
 
