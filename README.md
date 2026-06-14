@@ -20,40 +20,36 @@ whole Quest once via **x402**.
 
 ---
 
-## Status
+#### Status
 
-Early but **functional** core. What is implemented today:
+Early but functional core.
 
-- **Dependency-aware execution graph** — steps declare `dependsOn`; the runtime validates the DAG
-  (rejecting cycles and dangling dependencies) and schedules independent steps into concurrent waves.
-- **Real parallel execution** — independent steps in a wave run via `Promise.all`.
-- **Schema-enforced verification** — optional `zod` input/output schemas are enforced per step; a
-  breach marks the step failed and the run's `validationStatus` as `fail`.
-- **Assembly** — outputs are merged, or a single step's output is selected via `deliverable.from`.
-- **Observability** — subscribe to phase and per-step lifecycle events.
-- **Per-step retries** — optional retry policy with exponential backoff.
-- **x402 settlement, end to end** — quotes that record a deterministic plan hash, ERC-3009
-  `TransferWithAuthorization` EIP-712 construction, **real signature recovery** (viem), and on-chain
-  submission via a facilitator that pays gas and settles each nonce exactly once. The plan hash is
-  enforced server-side; it is not part of the signed payload (see note below).
+Nexus AI can already transform an objective into a structured Quest, coordinate execution across multiple capabilities, validate outputs, and assemble a final deliverable.
 
-Not yet implemented (tracked in [ROADMAP.md](./ROADMAP.md)): persistent (cross-process) nonce store
-for the facilitator, streaming/partial results, and the capability marketplace.
+The current runtime supports workflow orchestration, dependency management, parallel execution, output verification, runtime observability, retries, and optional x402-powered payment flows.
 
+### Execution Modes
+
+Nexus AI orchestrates capabilities. A capability may be internal, private, API-backed, model-backed, or fully custom. The runtime does not require any specific LLM provider.
+
+**Private Mode (default)**
+
+Privacy-first execution using internal and private capabilities only. No external LLM dependency is required. Suitable for deployments where execution remains inside the Nexus environment.
+
+**Extended Mode (optional)**
+
+Allows developer-configured external capabilities. External LLMs and APIs can be integrated when explicitly enabled. Nexus remains provider-agnostic and does not depend on any specific provider.
+
+Planned improvements (see ROADMAP.md) include persistent storage, streaming results, expanded production tooling, and the future capability marketplace.
 ---
 
 ## Execution Modes
 
-Nexus AI orchestrates capabilities. A capability may be internal, private, API-backed,
-model-backed, or fully custom. The runtime does not require any specific LLM provider.
+Nexus AI orchestrates capabilities. A capability may be internal, private, API-backed, model-backed, or fully custom. The runtime does not require any specific LLM provider.
 
-**Private Mode** (default) — privacy-first execution using internal and private capabilities only.
-No external LLM or model dependency. Suitable for web deployments where execution stays inside
-the controlled Nexus environment.
+**Private Mode** is the default execution mode. It is designed for privacy-first execution using internal and private capabilities only. No external LLM or model dependency is required. It is suitable for web deployments where execution stays inside the controlled Nexus environment.
 
-**Extended Mode** (optional) — allows developer-configured external capabilities. External LLMs and
-APIs are used only when explicitly enabled. Nexus remains provider-agnostic; external providers are
-integrations, not runtime dependencies.
+**Extended Mode** is optional. It allows developer-configured external capabilities when explicitly enabled. External LLMs and APIs can be integrated without making them runtime dependencies. Nexus remains provider-agnostic, and external providers remain optional integrations.
 
 ```ts
 const runtime = createQuestRuntime({
