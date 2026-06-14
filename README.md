@@ -1,4 +1,4 @@
-# Nexus AI SDK
+# Nexus AI SDK.
 
 [![CI](https://github.com/NicoKhaghani/nexus-ai-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/NicoKhaghani/nexus-ai-sdk/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/NicoKhaghani/nexus-ai-sdk/blob/main/LICENSE)
